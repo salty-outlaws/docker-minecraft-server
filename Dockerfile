@@ -1,7 +1,5 @@
 FROM openjdk:8u212-jre-alpine
 
-LABEL org.opencontainers.image.authors="Geoff Bourne <itzgeoff@gmail.com>"
-
 # upgrade all packages since alpine jre8 base image tops out at 8u212
 RUN apk -U --no-cache upgrade
 
@@ -68,6 +66,9 @@ VOLUME ["/data"]
 COPY server.properties /tmp/server.properties
 COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
+
+RUN git clone https://github.com/salty-outlaws/world-zero
+RUN mv world-zero world
 
 ENV UID=1000 GID=1000 \
   JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
