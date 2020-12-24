@@ -61,14 +61,14 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 COPY mcstatus /usr/local/bin
-
-VOLUME ["/data"]
-COPY server.properties /tmp/server.properties
-COPY log4j2.xml /tmp/log4j2.xml
 WORKDIR /data
 
 RUN git clone https://github.com/salty-outlaws/world-zero
 RUN mv world-zero world
+
+VOLUME ["/data"]
+COPY server.properties /tmp/server.properties
+COPY log4j2.xml /tmp/log4j2.xml
 
 ENV UID=1000 GID=1000 \
   JVM_XX_OPTS="-XX:+UseG1GC" MEMORY="1G" \
