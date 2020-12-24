@@ -21,9 +21,13 @@ RUN apk add --no-cache -U \
   knock \
   ttf-dejavu
 
+RUN git clone https://github.com/salty-outlaws/world-zero
+
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir -m 777 /data \
+  && mv world-zero /data/world \
+  && chown -R minecraft:minecraft /data/world \
   && chown minecraft:minecraft /data /home/minecraft
 
 COPY files/sudoers* /etc/sudoers.d
@@ -61,12 +65,10 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
  --from https://github.com/itzg/{{.app}}/releases/download/{{.version}}/{{.app}}_{{.version}}_{{.os}}_{{.arch}}.tar.gz
 
 COPY mcstatus /usr/local/bin
-WORKDIR /data
 
-RUN git clone https://github.com/salty-outlaws/world-zero
-RUN mv world-zero world
 
 VOLUME ["/data"]
+WORKDIR /data
 COPY server.properties /tmp/server.properties
 COPY log4j2.xml /tmp/log4j2.xml
 
@@ -78,12 +80,14 @@ ENV UID=1000 GID=1000 \
   ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_TIMEOUT_INIT=600 AUTOPAUSE_PERIOD=10
 
 COPY start* /
+COPY test /
 COPY health.sh /
 ADD files/autopause /autopause
 
 RUN dos2unix /start* && chmod +x /start*
 RUN dos2unix /health.sh && chmod +x /health.sh
 RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
+RUN dos2unix /test && chmod +x /test
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD /health.sh
