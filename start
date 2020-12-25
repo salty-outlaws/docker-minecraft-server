@@ -32,16 +32,16 @@ if [ $(id -u) = 0 ]; then
   fi
 
   git clone https://github.com/salty-outlaws/world-zero
-  mv world-old /data/world
+  mv world-zero /data/world
 
   sed -i "s/dummy-token/$GITHUB_TOKEN/g" /backup-script.sh
   sed -i "s/dummy-user/$GITHUB_USER/g" /backup-script.sh
   sed -i "s/dummy-email/$GITHUB_EMAIL/g" /backup-script.sh
 
-  if [[ $(stat -c "%u" /data) != $UID ]]; then
-    log "Changing ownership of /data to $UID ..."
-    chown -R ${runAsUser}:${runAsGroup} /data
-  fi
+  # if [[ $(stat -c "%u" /data) != $UID ]]; then
+  log "Changing ownership of /data to $UID ..."
+  chown -R ${runAsUser}:${runAsGroup} /data
+  # fi
 
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
