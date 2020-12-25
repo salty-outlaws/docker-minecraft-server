@@ -21,13 +21,9 @@ RUN apk add --no-cache -U \
   knock \
   ttf-dejavu
 
-RUN git clone https://github.com/salty-outlaws/world-zero
-
 RUN addgroup -g 1000 minecraft \
   && adduser -Ss /bin/false -u 1000 -G minecraft -h /home/minecraft minecraft \
   && mkdir -m 777 /data \
-  && mv world-zero /data/world \
-  && chown -R minecraft:minecraft /data/world \
   && chown minecraft:minecraft /data /home/minecraft
 
 COPY files/sudoers* /etc/sudoers.d
@@ -66,6 +62,8 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
 
 COPY mcstatus /usr/local/bin
 
+ADD crontab.txt /tmp/crontab.txt
+RUN /usr/bin/crontab /tmp/crontab.txt
 
 VOLUME ["/data"]
 WORKDIR /data
@@ -80,14 +78,14 @@ ENV UID=1000 GID=1000 \
   ENABLE_AUTOPAUSE=false AUTOPAUSE_TIMEOUT_EST=3600 AUTOPAUSE_TIMEOUT_KN=120 AUTOPAUSE_TIMEOUT_INIT=600 AUTOPAUSE_PERIOD=10
 
 COPY start* /
-COPY test /
+COPY backup-script.sh /
 COPY health.sh /
 ADD files/autopause /autopause
 
 RUN dos2unix /start* && chmod +x /start*
 RUN dos2unix /health.sh && chmod +x /health.sh
 RUN dos2unix /autopause/* && chmod +x /autopause/*.sh
-RUN dos2unix /test && chmod +x /test
+RUN dos2unix /backup-script.sh && chmod +x /backup-script.sh
 
 ENTRYPOINT [ "/start" ]
 HEALTHCHECK --start-period=1m CMD /health.sh
