@@ -38,10 +38,12 @@ if [ $(id -u) = 0 ]; then
   sed -i "s/dummy-user/$GITHUB_USER/g" /backup-script.sh
   sed -i "s/dummy-email/$GITHUB_EMAIL/g" /backup-script.sh
 
-  # if [[ $(stat -c "%u" /data) != $UID ]]; then
+  log "Installing mods"
+  mkdir -p /data/mods
+  curl -s https://salty-outlaws.github.io/mc-mods-cdn/install.sh | bash
+
   log "Changing ownership of /data to $UID ..."
   chown -R ${runAsUser}:${runAsGroup} /data
-  # fi
 
   if [[ ${SKIP_NSSWITCH_CONF^^} != TRUE ]]; then
     echo 'hosts: files dns' > /etc/nsswitch.conf
