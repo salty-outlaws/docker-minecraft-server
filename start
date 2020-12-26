@@ -41,6 +41,7 @@ if [ $(id -u) = 0 ]; then
   log "Installing mods"
   mkdir -p /data/mods
   curl -s https://salty-outlaws.github.io/mc-mods-cdn/install.sh | bash
+  crond
 
   log "Changing ownership of /data to $UID ..."
   chown -R ${runAsUser}:${runAsGroup} /data
