@@ -63,7 +63,6 @@ RUN easy-add --var os=${TARGETOS} --var arch=${TARGETARCH}${TARGETVARIANT} \
 COPY mcstatus /usr/local/bin
 
 ADD crontab.txt /tmp/crontab.txt
-RUN /usr/bin/crontab /tmp/crontab.txt
 
 VOLUME ["/data"]
 WORKDIR /data
