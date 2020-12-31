@@ -37,15 +37,14 @@ if [ $(id -u) = 0 ]; then
 
   else
         # https://github.com/salty-outlaws/world-zero
-        git clone $WORLD_REPO
-        mv world-zero /data/world
+        git clone $WORLD_REPO /data/world
 
-          sed -i "s/dummy-token/$GITHUB_TOKEN/g" /backup-script.sh
-          sed -i "s/dummy-user/$GITHUB_USER/g" /backup-script.sh
-          sed -i "s/dummy-email/$GITHUB_EMAIL/g" /backup-script.sh
+        sed -i "s/dummy-token/$GITHUB_TOKEN/g" /backup-script.sh
+        sed -i "s/dummy-user/$GITHUB_USER/g" /backup-script.sh
+        sed -i "s/dummy-email/$GITHUB_EMAIL/g" /backup-script.sh
 
-          /usr/bin/crontab /tmp/crontab.txt
-          crond
+        /usr/bin/crontab /tmp/crontab.txt
+        crond
   fi
 
   if [ -z "$MODS_SCRIPT" ]
