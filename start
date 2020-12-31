@@ -31,7 +31,6 @@ if [ $(id -u) = 0 ]; then
     fi
   fi
 
-
   if [ -z "$WORLD_REPO" ]
   then
         echo "\$No World repo provided, will not backup"
@@ -46,6 +45,7 @@ if [ $(id -u) = 0 ]; then
           sed -i "s/dummy-email/$GITHUB_EMAIL/g" /backup-script.sh
 
           /usr/bin/crontab /tmp/crontab.txt
+          crond
   fi
 
   if [ -z "$MODS_SCRIPT" ]
@@ -57,7 +57,6 @@ if [ $(id -u) = 0 ]; then
     # https://salty-outlaws.github.io/mc-mods-cdn/install.sh
     curl -s $MODS_SCRIPT | bash
   fi
-
 
   log "Changing ownership of /data to $UID ..."
   chown -R ${runAsUser}:${runAsGroup} /data

@@ -1,1 +1,1 @@
-0 0 * * * /backup-script.sh >> /var/log/backup-script.log
+30 4,16 * * * /backup-script.sh >> /var/log/backup-script.log
